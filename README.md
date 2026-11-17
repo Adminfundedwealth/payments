@@ -587,6 +587,8 @@ New order events are persisted transactionally in a [durable webhook outbox](doc
 
 For server configuration, queue worker, scheduler, permissions, and SSL instructions, follow the dedicated [cPanel](docs/CPANEL.md) or [Ubuntu VPS](docs/VPS.md) guide.
 
+For a Railway Docker deployment with FrankenPHP, a dedicated MySQL database, health checks, and worker/scheduler commands, follow the [Railway deployment guide](docs/RAILWAY.md).
+
 ---
 
 ## <img src="docs/icons/plus.svg" width="18" height="18" alt=""/> Adding a Payment Provider
