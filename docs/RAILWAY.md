@@ -61,7 +61,9 @@ range; do not use an unrestricted wildcard.
 
 Generate `APP_KEY` once, keep it out of Git and logs, and reuse it for the web,
 worker, and scheduler services. Keep `APP_DEBUG=false` and insecure webhook or
-redirect options disabled.
+redirect options disabled. Railway injects configuration through environment
+variables rather than a root `.env` file; the persistent installation marker
+and database admin guard determine installed state after the first setup.
 
 ## Queue and scheduler
 

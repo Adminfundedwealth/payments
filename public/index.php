@@ -108,11 +108,16 @@ if (! is_file(__DIR__.'/../storage/installed') && $deploymentRequestPath === $de
 }
 
 // ── 3. Uninstalled Application Redirection (Domain Root & Subdirectory) ──────
+$applicationKey = getenv('APP_KEY');
+if ($applicationKey === false || trim($applicationKey) === '') {
+    $applicationKey = (string) ($_ENV['APP_KEY'] ?? ($_SERVER['APP_KEY'] ?? ''));
+}
+$hasApplicationEnvironment = is_file(__DIR__.'/../.env') || trim($applicationKey) !== '';
 $installerEndpoint = (bool) preg_match('~/install(\.php)?/?$~i', $deploymentRequestPath);
 // With an environment present, Laravel's database/admin installation guard is
 // authoritative. A missing marker must not make an installed merchant lose login.
 if (! DeploymentUrl::isHealthCheckRequest($deploymentRequestPath, $deploymentBasePath)
-    && (! is_file(__DIR__.'/../.env') || (! file_exists(__DIR__.'/../storage/installed') && $installerEndpoint))) {
+    && (! $hasApplicationEnvironment || (! file_exists(__DIR__.'/../storage/installed') && $installerEndpoint))) {
     $uri = $_SERVER['REQUEST_URI'] ?? '/';
     $path = parse_url($uri, PHP_URL_PATH) ?: '/';
 
