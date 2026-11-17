@@ -90,6 +90,13 @@ class InstallationWizardTest extends TestCase
             ->assertExactJson(['message' => 'Application installation is required.']);
     }
 
+    public function test_health_check_is_available_before_installation(): void
+    {
+        $this->beginInstallation();
+
+        $this->get('/up')->assertOk();
+    }
+
     public function test_successful_installation_creates_admin_and_disables_installer(): void
     {
         $this->beginInstallation();

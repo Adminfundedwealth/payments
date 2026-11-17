@@ -12,7 +12,7 @@ class RedirectToInstall
 
     public function handle(Request $request, Closure $next)
     {
-        if ($request->is('__upi_deployment_check')) {
+        if ($request->is('__upi_deployment_check', 'up')) {
             return $next($request);
         }
         $installerRequest = str_starts_with($request->path(), 'install');
