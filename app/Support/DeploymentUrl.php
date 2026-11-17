@@ -7,6 +7,11 @@ use InvalidArgumentException;
 /** Native PHP only: also used before Composer/Laravel boots on a fresh install. */
 class DeploymentUrl
 {
+    public static function isHealthCheckRequest(string $requestPath, string $basePath): bool
+    {
+        return $requestPath === rtrim($basePath, '/').'/up';
+    }
+
     public static function basePath(array $server): string
     {
         $requestPath = (string) parse_url((string) ($server['REQUEST_URI'] ?? '/'), PHP_URL_PATH);

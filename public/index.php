@@ -111,7 +111,8 @@ if (! is_file(__DIR__.'/../storage/installed') && $deploymentRequestPath === $de
 $installerEndpoint = (bool) preg_match('~/install(\.php)?/?$~i', $deploymentRequestPath);
 // With an environment present, Laravel's database/admin installation guard is
 // authoritative. A missing marker must not make an installed merchant lose login.
-if (! is_file(__DIR__.'/../.env') || (! file_exists(__DIR__.'/../storage/installed') && $installerEndpoint)) {
+if (! DeploymentUrl::isHealthCheckRequest($deploymentRequestPath, $deploymentBasePath)
+    && (! is_file(__DIR__.'/../.env') || (! file_exists(__DIR__.'/../storage/installed') && $installerEndpoint))) {
     $uri = $_SERVER['REQUEST_URI'] ?? '/';
     $path = parse_url($uri, PHP_URL_PATH) ?: '/';
 

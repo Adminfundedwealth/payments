@@ -93,6 +93,14 @@ class DeploymentCompatibilityTest extends TestCase
         $this->get('/payment/storage/outside.txt')->assertNotFound();
     }
 
+    public function test_health_check_bypasses_the_preinstall_redirect_for_root_and_subdirectory_apps(): void
+    {
+        $this->assertTrue(DeploymentUrl::isHealthCheckRequest('/up', ''));
+        $this->assertTrue(DeploymentUrl::isHealthCheckRequest('/gateway/up', '/gateway'));
+        $this->assertFalse(DeploymentUrl::isHealthCheckRequest('/install.php', ''));
+        $this->assertFalse(DeploymentUrl::isHealthCheckRequest('/healthy', ''));
+    }
+
     public function test_nginx_configuration_uses_only_public_files_and_explicit_php_targets(): void
     {
         $configuration = DeploymentConfiguration::nginx('https://example.test/payment', '/private/gateway/public', 'unix:/tmp/php-fpm.sock');
