@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Install · {{ config('app.name', 'UPI Gateway') }}</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%234f46e5'/><path d='M18 5 8 18h7l-1 9 10-13h-7z' fill='white'/></svg>">
+    <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -86,9 +86,7 @@
 
     {{-- Logo --}}
     <div class="mb-6 flex items-center justify-center gap-3 sm:mb-7">
-        <div class="installer-brand-mark flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-brand-500 to-brand-700">
-            <svg viewBox="0 0 32 32" class="w-6 h-6"><path d="M18 5 8 18h7l-1 9 10-13h-7z" fill="white"/></svg>
-        </div>
+        <img src="{{ asset('images/logo.png') }}" alt="" class="installer-brand-mark h-11 w-11 rounded-2xl object-cover">
         <div>
             <span class="block text-lg font-bold tracking-tight text-slate-950 sm:text-xl">{{ config('app.name', 'UPI Gateway') }}</span>
             <span class="block text-xs font-medium text-slate-500">Secure installation wizard</span>
