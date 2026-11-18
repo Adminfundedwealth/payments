@@ -2,14 +2,13 @@
 @section('title', 'Accept UPI payments directly in your bank account')
 
 @section('body')
-<div class="bg-white">
+<div class="public-site bg-white">
     @include('layouts.public-nav')
 
     {{-- Hero --}}
-    <section class="relative overflow-hidden bg-white">
-        <div class="absolute inset-0 -z-0" style="background: radial-gradient(900px circle at 80% -10%, rgb(99 102 241 / .13), transparent 55%), radial-gradient(600px circle at 5% 100%, rgb(14 165 233 / .09), transparent 55%);"></div>
-        <div class="absolute top-16 right-0 w-80 h-80 bg-brand-100/30 rounded-full blur-3xl -z-0 pointer-events-none"></div>
-        <div class="absolute bottom-0 left-0 w-64 h-64 bg-sky-100/30 rounded-full blur-3xl -z-0 pointer-events-none"></div>
+    <section class="public-hero relative overflow-hidden bg-white">
+        <div class="absolute top-16 right-0 w-80 h-80 bg-violet/15 rounded-full blur-3xl -z-0 pointer-events-none"></div>
+        <div class="absolute bottom-0 left-0 w-64 h-64 bg-brand-500/10 rounded-full blur-3xl -z-0 pointer-events-none"></div>
         <div class="relative mx-auto max-w-6xl px-4 sm:px-6 pt-16 pb-20 lg:pt-24 lg:pb-28 grid lg:grid-cols-2 gap-16 items-center">
             <div>
                 @if (config('auth.allow_registration', false))
@@ -22,8 +21,8 @@
                 <h1 class="mt-6 text-4xl sm:text-5xl lg:text-[3.5rem] font-extrabold tracking-tight text-slate-900 leading-[1.08]">
                     Accept UPI payments
                     <span class="relative whitespace-nowrap">
-                        <span class="bg-gradient-to-r from-brand-600 to-sky-500 bg-clip-text text-transparent">directly</span>
-                        <svg class="absolute -bottom-1 left-0 w-full" viewBox="0 0 200 8" fill="none" preserveAspectRatio="none"><path d="M0 6 Q50 0 100 4 Q150 8 200 2" stroke="url(#ug)" stroke-width="2.5" stroke-linecap="round" fill="none"/><defs><linearGradient id="ug" x1="0" y1="0" x2="200" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#4f46e5"/><stop offset="1" stop-color="#0ea5e9"/></linearGradient></defs></svg>
+                        <span class="bg-gradient-to-r from-brand-500 to-violet bg-clip-text text-transparent">directly</span>
+                        <svg class="absolute -bottom-1 left-0 w-full" viewBox="0 0 200 8" fill="none" preserveAspectRatio="none"><path d="M0 6 Q50 0 100 4 Q150 8 200 2" stroke="url(#ug)" stroke-width="2.5" stroke-linecap="round" fill="none"/><defs><linearGradient id="ug" x1="0" y1="0" x2="200" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="var(--color-electric-blue)"/><stop offset="1" stop-color="var(--color-violet)"/></linearGradient></defs></svg>
                     </span>
                     in your bank account
                 </h1>
@@ -89,14 +88,14 @@
     </section>
 
     {{-- Stats --}}
-    <section class="border-y border-slate-200/70 bg-slate-50 py-12">
+    <section class="public-stats border-y border-slate-200/70 bg-slate-50 py-12">
         <div class="mx-auto max-w-6xl px-4 sm:px-6">
             <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 text-center">
                 @foreach ([
-                    ['₹0', 'Transaction fee', 'text-emerald-600'],
-                    ['< 5s', 'Auto verification', 'text-brand-600'],
-                    ['99.9%', 'Uptime SLA', 'text-sky-600'],
-                    ['6 UPI apps', 'Supported', 'text-amber-600'],
+                    ['₹0', 'Transaction fee', 'text-brand-500'],
+                    ['< 5s', 'Auto verification', 'text-brand-500'],
+                    ['99.9%', 'Uptime SLA', 'text-violet'],
+                    ['6 UPI apps', 'Supported', 'text-orange'],
                 ] as [$val, $label, $color])
                     <div class="group">
                         <div class="text-3xl sm:text-4xl font-extrabold tracking-tight {{ $color }}">{{ $val }}</div>
@@ -108,7 +107,7 @@
     </section>
 
     {{-- Integrations strip --}}
-    <section class="bg-white py-10 border-b border-slate-200/70">
+    <section class="public-integrations bg-white py-10 border-b border-slate-200/70">
         <div class="mx-auto max-w-6xl px-4 sm:px-6 text-center">
             <p class="text-xs font-semibold uppercase tracking-widest text-slate-400 mb-6">Works with all major UPI apps</p>
             <div class="flex flex-wrap justify-center items-center gap-6">
@@ -130,7 +129,7 @@
     </section>
 
     {{-- Features --}}
-    <section id="features" class="bg-slate-50 border-y border-slate-200/70 py-20 lg:py-28">
+    <section id="features" class="public-features bg-slate-50 border-y border-slate-200/70 py-20 lg:py-28">
         <div class="mx-auto max-w-6xl px-4 sm:px-6">
             <div class="max-w-2xl">
                 <div class="text-sm font-semibold text-brand-600">Everything you need</div>
@@ -139,12 +138,13 @@
             </div>
             <div class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 @foreach ([
-                    ['qr', 'Dynamic QR per order', 'Every order gets a QR with the exact amount and a unique reference, so payments are matched automatically.', 'bg-violet-600'],
-                    ['bolt', 'Automatic verification', 'Connect Paytm for Business and payments are confirmed within seconds, no screenshots needed.', 'bg-amber-500'],
-                    ['banknotes', 'Direct settlement', 'Money goes straight from your customer to your bank account. We never touch your funds.', 'bg-emerald-600'],
-                    ['link', 'Signed webhooks', 'Get notified on your server the moment an order is paid, with HMAC signatures and automatic retries.', 'bg-sky-600'],
+                    ['qr', 'Dynamic QR per order', 'Every order gets a QR with the exact amount and a unique reference, so payments are matched automatically.', 'bg-brand-600'],
+                    ['bolt', 'Automatic verification', 'Connect Paytm for Business and payments are confirmed within seconds, no screenshots needed.', 'bg-brand-500'],
+                    ['banknotes', 'Direct settlement', 'Money goes straight from your customer to your bank account. We never touch your funds.', 'bg-purple'],
+                    ['link', 'Signed webhooks', 'Get notified on your server the moment an order is paid, with HMAC signatures and automatic retries.', 'bg-violet'],
                     ['code', 'Developer-friendly API', 'Create orders and check status with a simple REST API. Integrate in under an hour.', 'bg-brand-600'],
-                    ['users', 'Multi-merchant ready', 'Multiple UPI accounts per business, a clean dashboard, and payment links you can share anywhere.', 'bg-rose-500'],
+                    ['chart', 'Payment activity dashboard', 'Track collected payments, pending orders, success rate, and recent activity from one place.', 'bg-brand-500'],
+                    ['users', 'Multi-merchant ready', 'Multiple UPI accounts per business, a clean dashboard, and payment links you can share anywhere.', 'bg-purple'],
                 ] as [$icon, $title, $text, $bg])
                     <div class="card p-6 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200 group">
                         <div class="grid place-items-center w-11 h-11 rounded-xl {{ $bg }} text-white shadow-sm">
@@ -159,7 +159,7 @@
     </section>
 
     {{-- Comparison --}}
-    <section class="py-20 lg:py-24 bg-white border-b border-slate-200/70">
+    <section class="public-comparison py-20 lg:py-24 bg-white border-b border-slate-200/70">
         <div class="mx-auto max-w-4xl px-4 sm:px-6">
             <div class="text-center mb-12">
                 <div class="text-sm font-semibold text-brand-600">Why choose us</div>
@@ -207,6 +207,8 @@
             </div>
         </div>
     </section>
+    {{-- Testimonials --}}
+    <section class="public-testimonials py-20 lg:py-24">
         <div class="mx-auto max-w-6xl px-4 sm:px-6">
             <div class="text-center mb-12">
                 <div class="text-sm font-semibold text-brand-600">Trusted by merchants</div>
@@ -236,7 +238,7 @@
     </section>
 
     {{-- How it works --}}
-    <section id="how" class="py-20 lg:py-28">
+    <section id="how" class="public-flow public-developer py-20 lg:py-28">
         <div class="mx-auto max-w-6xl px-4 sm:px-6 grid lg:grid-cols-2 gap-16 items-center">
             <div>
                 <div class="text-sm font-semibold text-brand-600">How it works</div>
@@ -276,8 +278,36 @@
         </div>
     </section>
 
+    {{-- Security and platform controls --}}
+    <section class="public-security py-16 lg:py-20">
+        <div class="mx-auto max-w-6xl px-4 sm:px-6">
+            <div class="max-w-2xl">
+                <div class="text-sm font-semibold text-brand-600">Built for payment operations</div>
+                <h2 class="mt-2 text-3xl font-bold tracking-tight text-slate-900">Clear controls from integration to confirmation</h2>
+                <p class="mt-4 text-slate-600">Keep payment status, customer handoff, and server-side notifications connected with transparent tools for your team.</p>
+            </div>
+            <div class="mt-8 grid gap-4 md:grid-cols-3">
+                <article class="public-security-card card p-5">
+                    <x-icon name="shield" class="w-5 h-5 text-brand-600" />
+                    <h3 class="mt-3 font-semibold text-slate-900">Signed webhooks</h3>
+                    <p class="mt-1 text-sm text-slate-600">Verify event signatures on your server and review delivery attempts in the dashboard.</p>
+                </article>
+                <article class="public-security-card card p-5">
+                    <x-icon name="code" class="w-5 h-5 text-brand-600" />
+                    <h3 class="mt-3 font-semibold text-slate-900">Separate test mode</h3>
+                    <p class="mt-1 text-sm text-slate-600">Exercise API flows with Sandbox credentials before connecting Live payment accounts.</p>
+                </article>
+                <article class="public-security-card card p-5">
+                    <x-icon name="banknotes" class="w-5 h-5 text-brand-600" />
+                    <h3 class="mt-3 font-semibold text-slate-900">Direct to your account</h3>
+                    <p class="mt-1 text-sm text-slate-600">Payments are received by your configured UPI account or selected hosted payment provider.</p>
+                </article>
+            </div>
+        </div>
+    </section>
+
     {{-- Pricing --}}
-    <section id="pricing" class="bg-slate-50 border-y border-slate-200/70 py-20 lg:py-28">
+    <section id="pricing" class="public-pricing bg-slate-50 border-y border-slate-200/70 py-20 lg:py-28">
         <div class="mx-auto max-w-6xl px-4 sm:px-6 text-center">
             <div class="text-sm font-semibold text-brand-600">Pricing</div>
             <h2 class="mt-2 text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">Simple and transparent</h2>
@@ -370,7 +400,7 @@
     </section>
 
     {{-- FAQ --}}
-    <section class="py-20 lg:py-28 bg-slate-50 border-t border-slate-200/70">
+    <section class="public-faq py-20 lg:py-28 bg-slate-50 border-t border-slate-200/70">
         <div class="mx-auto max-w-3xl px-4 sm:px-6">
             <div class="text-center mb-12">
                 <div class="text-sm font-semibold text-brand-600">FAQ</div>
@@ -400,9 +430,9 @@
     </section>
 
     {{-- CTA --}}
-    <section class="px-4 sm:px-6 py-20">
+    <section class="public-cta px-4 sm:px-6 py-20">
         <div class="relative mx-auto max-w-6xl overflow-hidden rounded-3xl bg-slate-950 px-6 py-16 sm:px-16 text-center">
-            <div class="absolute inset-0" style="background: radial-gradient(700px circle at 50% -20%, rgb(79 70 229 / .7), transparent 55%), radial-gradient(400px circle at 80% 120%, rgb(14 165 233 / .4), transparent 55%);"></div>
+            <div class="public-cta-art absolute inset-0" aria-hidden="true"></div>
             <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width=\'60\' height=\'60\' viewBox=\'0 0 60 60\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'none\' fill-rule=\'evenodd\'%3E%3Cg fill=\'%23ffffff\' fill-opacity=\'0.03\'%3E%3Cpath d=\'M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z\'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-40"></div>
             <div class="relative">
                 <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-white/80 ring-1 ring-white/20 mb-6">
@@ -421,7 +451,7 @@
     </section>
 
     {{-- CTA bottom strip --}}
-    <div class="bg-brand-600 py-3.5">
+    <div class="public-cta-strip bg-brand-600 py-3.5">
         <div class="mx-auto max-w-6xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-3">
             <p class="flex items-center gap-2 text-white text-sm font-medium"><x-icon name="bolt" class="w-4 h-4" /> Join hundreds of merchants already using {{ config('app.name') }}</p>
             @if (config('auth.allow_registration', false))
@@ -430,7 +460,7 @@
         </div>
     </div>
 
-    <footer class="bg-slate-950 text-slate-400">
+    <footer class="public-footer bg-slate-950 text-slate-400">
         <div class="mx-auto max-w-6xl px-4 sm:px-6 py-14 grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
             <div class="lg:col-span-2">
                 <x-logo dark />

@@ -1,11 +1,11 @@
 @extends('layouts.base')
 
 @section('body')
-<div class="min-h-full grid lg:grid-cols-2">
+<div class="auth-layout min-h-full grid lg:grid-cols-2">
     {{-- Brand panel --}}
-    <div class="relative hidden lg:flex flex-col justify-between overflow-hidden bg-slate-950 p-12 text-white">
-        <div class="absolute inset-0 opacity-40" style="background: radial-gradient(600px circle at 20% 20%, rgb(79 70 229 / .55), transparent 60%), radial-gradient(500px circle at 90% 80%, rgb(14 165 233 / .35), transparent 60%);"></div>
-        <div class="absolute inset-0 opacity-[0.07]" style="background-image: linear-gradient(white 1px, transparent 1px), linear-gradient(90deg, white 1px, transparent 1px); background-size: 40px 40px;"></div>
+    <div class="auth-brand-panel relative hidden lg:flex flex-col justify-between overflow-hidden bg-slate-950 p-12 text-white">
+        <div class="auth-brand-light absolute inset-0 opacity-40" aria-hidden="true"></div>
+        <div class="auth-brand-grid absolute inset-0 opacity-[0.07]" aria-hidden="true"></div>
 
         <a href="{{ route('home') }}" class="relative"><x-logo dark /></a>
 
@@ -23,7 +23,7 @@
     </div>
 
     {{-- Form --}}
-    <div class="flex flex-col justify-center px-4 py-12 sm:px-12 bg-white">
+    <div class="auth-form-panel flex flex-col justify-center px-4 py-12 sm:px-12 bg-white">
         <div class="w-full max-w-sm mx-auto">
             <a href="{{ route('home') }}" class="lg:hidden inline-block mb-10"><x-logo /></a>
             <h1 class="text-2xl font-bold tracking-tight text-slate-900">@yield('title')</h1>

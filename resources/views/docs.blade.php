@@ -9,17 +9,17 @@
 @push('head')
 <style>
     html { scroll-behavior: smooth; scroll-padding-top: 5rem; }
-    .nav-link.active { color: #4f46e5; border-left-color: #4f46e5; font-weight: 600; }
+    .nav-link.active { color: var(--color-electric-blue); border-left-color: var(--color-electric-blue); font-weight: 600; }
     .section-anchor { scroll-margin-top: 5rem; }
 </style>
 @endpush
 
 @section('body')
-<div class="bg-white min-h-full">
+<div class="public-docs min-h-full">
     @include('layouts.public-nav')
 
     {{-- Hero --}}
-    <div class="border-b border-slate-200 bg-gradient-to-br from-slate-950 via-brand-950 to-slate-900">
+    <div class="public-docs-hero border-b border-slate-200 bg-gradient-to-br from-slate-950 via-brand-950 to-slate-900">
         <div class="mx-auto max-w-6xl px-4 sm:px-6 py-14">
             <div class="flex items-center gap-2 mb-4">
                 <span class="inline-flex items-center gap-1.5 rounded-full bg-brand-500/20 px-3 py-1 text-xs font-semibold text-brand-300 ring-1 ring-brand-500/30">
@@ -37,10 +37,10 @@
         </div>
     </div>
 
-    <div class="mx-auto max-w-6xl px-4 sm:px-6 py-10 lg:py-14 grid lg:grid-cols-[240px_1fr] gap-12">
+    <div class="public-docs-layout mx-auto max-w-6xl px-4 sm:px-6 py-10 lg:py-14 grid lg:grid-cols-[240px_1fr] gap-12">
 
         {{-- Sidebar --}}
-        <aside class="hidden lg:block">
+        <aside class="public-docs-sidebar hidden lg:block">
             <nav class="sticky top-24 space-y-6 text-sm" id="docs-nav">
                 @foreach ([
                     'Getting Started' => ['intro' => 'Introduction', 'auth' => 'Live authentication', 'sandbox' => 'Sandbox authentication'],

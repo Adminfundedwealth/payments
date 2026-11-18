@@ -2,7 +2,7 @@
 @section('title', 'Sandbox Checkout')
 
 @section('body')
-<main class="min-h-full bg-amber-50 px-4 py-10">
+<main class="payment-simulator min-h-full bg-amber-50 px-4 py-10">
     <div class="mx-auto max-w-2xl">
         <div class="mb-5 rounded-xl bg-amber-400 px-5 py-4 text-center text-sm font-bold tracking-widest text-amber-950">
             SANDBOX · TEST TRANSACTION · NO REAL MONEY

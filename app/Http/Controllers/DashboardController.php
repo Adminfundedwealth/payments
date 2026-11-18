@@ -16,9 +16,11 @@ class DashboardController extends Controller
         // ── Single query for all status-based stats ───────────────────────────
         // Replaces 7 separate COUNT/SUM calls with one grouped aggregation.
         $agg = $orders()
-            ->selectRaw("SUM(CASE WHEN status = 'paid' THEN 1 ELSE 0 END) AS paid_count,
+            ->selectRaw("COUNT(*) AS total_count,
+                SUM(CASE WHEN status = 'paid' THEN 1 ELSE 0 END) AS paid_count,
                 SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) AS pending_count,
                 SUM(CASE WHEN status = 'review' THEN 1 ELSE 0 END) AS review_count,
+                SUM(CASE WHEN status = 'failed' THEN 1 ELSE 0 END) AS failed_count,
                 SUM(CASE WHEN status IN ('paid', 'expired', 'failed') THEN 1 ELSE 0 END) AS closed_count,
                 COALESCE(SUM(CASE WHEN status = 'paid' THEN amount ELSE 0 END), 0) AS total_amount,
                 COALESCE(SUM(CASE WHEN status = 'paid' AND paid_at >= ? THEN amount ELSE 0 END), 0) AS today_amount,
@@ -30,12 +32,14 @@ class DashboardController extends Controller
         $closedCount = (int) $agg->closed_count;
 
         $stats = [
+            'total_count' => (int) $agg->total_count,
             'today_amount' => (float) $agg->today_amount,
             'today_count' => (int) $agg->today_count,
             'total_amount' => (float) $agg->total_amount,
             'paid_count' => $paidCount,
             'pending_count' => (int) $agg->pending_count,
             'review_count' => (int) $agg->review_count,
+            'failed_count' => (int) $agg->failed_count,
             'success_rate' => $closedCount ? (int) round($paidCount / $closedCount * 100) : null,
         ];
 

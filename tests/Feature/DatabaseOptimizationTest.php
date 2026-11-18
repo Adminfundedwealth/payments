@@ -71,26 +71,29 @@ class DatabaseOptimizationTest extends TestCase
     {
         $merchant = $this->merchant();
 
-        // 2 paid today, 1 paid yesterday, 1 pending, 1 expired, 1 review
+        // 2 paid today, 1 paid yesterday, 1 pending, 1 expired, 1 review, 1 failed
         $this->order($merchant, Order::PAID, now()->toDateTimeString());
         $this->order($merchant, Order::PAID, now()->toDateTimeString());
         $this->order($merchant, Order::PAID, now()->subDay()->toDateTimeString());
         $this->order($merchant, Order::PENDING);
         $this->order($merchant, Order::EXPIRED);
         $this->order($merchant, Order::REVIEW);
+        $this->order($merchant, Order::FAILED);
 
         $response = $this->actingAs($merchant)->get(route('dashboard'))->assertOk();
 
         $stats = $response->viewData('stats');
 
+        $this->assertSame(7, $stats['total_count']);
         $this->assertSame(3, $stats['paid_count']);
         $this->assertSame(2, $stats['today_count']);
         $this->assertSame(200.0, $stats['today_amount']);
         $this->assertSame(300.0, $stats['total_amount']);
         $this->assertSame(1, $stats['pending_count']);
         $this->assertSame(1, $stats['review_count']);
-        // success_rate = 3 paid / (3 paid + 1 expired) = 75%
-        $this->assertSame(75, $stats['success_rate']);
+        $this->assertSame(1, $stats['failed_count']);
+        // success_rate = 3 paid / (3 paid + 1 expired + 1 failed) = 60%
+        $this->assertSame(60, $stats['success_rate']);
     }
 
     public function test_dashboard_stats_zero_when_no_orders(): void
@@ -101,7 +104,9 @@ class DatabaseOptimizationTest extends TestCase
         $stats = $response->viewData('stats');
 
         $this->assertSame(0, $stats['paid_count']);
+        $this->assertSame(0, $stats['total_count']);
         $this->assertSame(0.0, $stats['total_amount']);
+        $this->assertSame(0, $stats['failed_count']);
         $this->assertNull($stats['success_rate']);
     }
 

@@ -13,7 +13,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('head')
 </head>
-<body class="h-full bg-slate-50 text-slate-800 antialiased">
+<body class="site-body h-full bg-slate-50 text-slate-800 antialiased">
     @yield('body')
     @stack('scripts')
 </body>
