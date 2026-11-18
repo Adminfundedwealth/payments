@@ -2,7 +2,7 @@
 
 Every supported deployment method ends in this browser flow. cPanel and Ubuntu VPS instructions prepare PHP, MySQL, filesystem permissions, and the web server; the wizard then performs application setup.
 
-The wizard writes `ALLOW_REGISTRATION=false` to `.env`; public `/register` GET and POST requests return 404 and the login page hides the signup link. An administrator may intentionally open public merchant signup by setting `ALLOW_REGISTRATION=true` in the server's private `.env` file and refreshing cached Laravel configuration with `php artisan config:cache` if applicable. Existing merchant accounts and administrator controls remain available with signup disabled.
+The wizard writes `ALLOW_REGISTRATION=false` to `.env`; `/register` shows a notice while signup is closed, and the login page always shows a Sign Up link. An administrator may open public merchant signup by setting `ALLOW_REGISTRATION=true` in the server's private `.env` file and refreshing cached Laravel configuration if applicable. Google sign-in requires private OAuth client credentials and an authorized callback URL ending in `/auth/google/callback`; new Google merchants are created only while registration is enabled.
 
 ## Before opening `/install`
 

@@ -7,6 +7,7 @@ use Illuminate\Auth\Events\Lockout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rules\Password;
 
@@ -21,9 +22,11 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+        $this->normalizeEmail($request);
+
         $credentials = $request->validate([
             'email' => ['required', 'email'],
-            'password' => ['required'],
+            'password' => ['required', 'string'],
         ]);
 
         // Per-email+IP lockout after 10 failures in 15 minutes.
@@ -69,6 +72,8 @@ class AuthController extends Controller
 
         if (! Auth::user()->is_active) {
             Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
 
             return back()
                 ->withErrors(['email' => 'Your account has been disabled.'])
@@ -88,25 +93,43 @@ class AuthController extends Controller
 
     public function showRegister()
     {
-        abort_unless(config('auth.allow_registration', false), 404);
-
-        return view('auth.register');
+        return view('auth.register', [
+            'registrationEnabled' => config('auth.allow_registration', false),
+        ]);
     }
 
     public function register(Request $request)
     {
-        abort_unless(config('auth.allow_registration', false), 404);
+        if (! config('auth.allow_registration', false)) {
+            return redirect()->route('register')
+                ->with('status', 'Merchant registration is temporarily unavailable. Please try again later.');
+        }
+
+        $this->normalizeEmail($request);
 
         $data = $request->validate([
             'name' => ['required', 'string', 'max:100'],
             'business_name' => ['required', 'string', 'max:100'],
             'email' => ['required', 'email', 'max:255', 'unique:users'],
-            'phone' => ['nullable', 'string', 'max:20'],
-            'password' => ['required', 'confirmed', $this->passwordRule()],
+            'phone' => ['nullable', 'string', 'max:20', 'regex:/^\+?(?=(?:\D*\d){7,})[0-9\s().-]{7,20}$/'],
+            'password' => ['required', 'string', 'confirmed', $this->passwordRule()],
         ]);
 
-        $user = User::create($data + ['role' => 'merchant']);
-        $user->regenerateApiCredentials();
+        $user = DB::transaction(function () use ($data) {
+            $user = User::create([
+                'name' => $data['name'],
+                'business_name' => $data['business_name'],
+                'email' => $data['email'],
+                'phone' => $data['phone'] ?? null,
+                'password' => $data['password'],
+                'role' => 'merchant',
+                'is_active' => true,
+            ]);
+            $user->regenerateApiCredentials();
+
+            return $user;
+        });
+
         Auth::login($user);
         $request->session()->regenerate();
 
@@ -126,6 +149,15 @@ class AuthController extends Controller
     }
 
     // ── Helpers ───────────────────────────────────────────────────────────────
+
+    private function normalizeEmail(Request $request): void
+    {
+        $email = $request->input('email');
+
+        if (is_string($email)) {
+            $request->merge(['email' => mb_strtolower(trim($email))]);
+        }
+    }
 
     /**
      * Password rule: min 10 chars; uncompromised check only in production.

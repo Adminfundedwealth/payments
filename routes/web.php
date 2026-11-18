@@ -7,6 +7,7 @@ use App\Http\Controllers\ChangePasswordController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\ConfirmPasswordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\GoogleAuthController;
 use App\Http\Controllers\InstallController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentAccountController;
@@ -134,6 +135,8 @@ Route::middleware('guest')->group(function () {
     Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1');
     Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
     Route::post('/register', [AuthController::class, 'register'])->middleware('throttle:10,1');
+    Route::get('/auth/google', [GoogleAuthController::class, 'redirect'])->middleware('throttle:10,1')->name('google.redirect');
+    Route::get('/auth/google/callback', [GoogleAuthController::class, 'callback'])->middleware('throttle:20,1')->name('google.callback');
 });
 
 // ── Password confirmation (requires auth, no active check — even disabled accounts

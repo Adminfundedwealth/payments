@@ -2,7 +2,7 @@
 
 This guide explains how to prepare cPanel and complete setup directly in your browser. You do **not** need SSH, Composer, Node.js, or npm on the hosting server; the distribution package includes all production PHP dependencies in `vendor/` and pre-built frontend assets in `public/build/`.
 
-The installer writes `ALLOW_REGISTRATION=false`. To intentionally allow public merchant signup later, an administrator can edit the private `.env` file in cPanel File Manager to `ALLOW_REGISTRATION=true`. If Laravel configuration has been cached, refresh that cache using the hosting PHP CLI (`php artisan config:cache`) or ask the host to do so. Set the value back to `false` to close signup. Existing merchant login and administrator merchant controls work while public signup is closed.
+The installer writes `ALLOW_REGISTRATION=false`. The login page continues to show a Sign Up link, and `/register` explains when registration is closed. To allow public merchant signup, edit the private `.env` file to `ALLOW_REGISTRATION=true`; refresh cached configuration with `php artisan config:cache` if applicable. Set the value back to `false` to close new registrations. Google sign-in additionally requires private `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` values and a callback URL of `https://payments.fundedwealth.com/auth/google/callback` (or the matching URL for your domain).
 
 ---
 

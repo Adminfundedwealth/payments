@@ -33,6 +33,10 @@ APP_ENV=production
 APP_DEBUG=false
 APP_URL=https://payments.fundedwealth.com
 ASSET_URL=https://payments.fundedwealth.com
+ALLOW_REGISTRATION=true
+GOOGLE_CLIENT_ID=<Google OAuth client ID>
+GOOGLE_CLIENT_SECRET=<Google OAuth client secret>
+GOOGLE_REDIRECT_URI=https://payments.fundedwealth.com/auth/google/callback
 APP_KEY=<generate once in Railway and keep identical on every app service>
 LOG_CHANNEL=stderr
 DB_CONNECTION=mysql
@@ -64,6 +68,13 @@ worker, and scheduler services. Keep `APP_DEBUG=false` and insecure webhook or
 redirect options disabled. Railway injects configuration through environment
 variables rather than a root `.env` file; the persistent installation marker
 and database admin guard determine installed state after the first setup.
+
+Create the Google OAuth client in Google Cloud and add
+`https://payments.fundedwealth.com/auth/google/callback` to its authorized
+redirect URIs. Set the client ID and secret only in Railway's private service
+variables, never in Git. `ALLOW_REGISTRATION=true` publicly enables merchant
+registration; set it to `false` to close new account creation. Existing
+merchants can still use Google sign-in when registration is closed.
 
 ## Queue and scheduler
 

@@ -44,6 +44,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'google_id',
         'api_secret',
         'sandbox_api_secret',
         'webhook_secret',

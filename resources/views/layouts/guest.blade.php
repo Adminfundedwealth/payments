@@ -36,6 +36,16 @@
                         <x-icon name="alert" class="w-5 h-5" /> {{ $errors->first() }}
                     </div>
                 @endif
+                @if ($errors->has('google'))
+                    <div role="alert" class="mb-5 flex items-start gap-2 rounded-lg bg-red-50 ring-1 ring-red-200 px-3 py-2.5 text-sm text-red-700">
+                        <x-icon name="alert" class="w-5 h-5" /> {{ $errors->first('google') }}
+                    </div>
+                @endif
+                @if (session('status'))
+                    <div role="status" class="mb-5 rounded-lg bg-emerald-50 ring-1 ring-emerald-200 px-3 py-2.5 text-sm text-emerald-800">
+                        {{ session('status') }}
+                    </div>
+                @endif
                 @yield('content')
             </div>
         </div>

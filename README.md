@@ -371,6 +371,9 @@ For command-line or development deployments, configure the following variables i
 | `APP_ENV` | Application environment | production |
 | `APP_DEBUG` | Debug mode | false |
 | `ALLOW_REGISTRATION` | Public merchant signup; disabled by default. | false |
+| `GOOGLE_CLIENT_ID` | Google OAuth client ID for merchant sign-in. | Not set |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret; keep it private. | Not set |
+| `GOOGLE_REDIRECT_URI` | Google OAuth callback URL. | `https://payments.fundedwealth.com/auth/google/callback` |
 | `APP_URL` | Application URL | https://example.com |
 | `DB_CONNECTION` | Database driver | mysql |
 | `DB_HOST` | Database host | 127.0.0.1 |
@@ -396,7 +399,7 @@ Never commit production credentials or API secrets to GitHub.
   3. Clear and recache configuration: `php artisan config:cache`.
   4. Active users will be gracefully redirected to the login screen on their next request; all new sessions will be stored encrypted.
 
-Public `/register` GET and POST requests return 404 while `ALLOW_REGISTRATION=false`, and the login page hides its signup link. An administrator who intentionally wants public signup can set `ALLOW_REGISTRATION=true` in the server's private `.env` file. If configuration is cached, run `php artisan config:cache` afterward using the server's PHP CLI. Set it back to `false` and refresh the cache to close signup. Existing merchant login and administrator merchant controls remain available while signup is closed.
+The login page always shows a **Sign Up** link. `/register` displays a clear notice while `ALLOW_REGISTRATION=false` and accepts registrations only when that environment setting is true. Set it in the server's private environment and refresh cached configuration if applicable. Set it back to `false` to close registration. Google sign-in requires `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, and `GOOGLE_REDIRECT_URI`; register `https://payments.fundedwealth.com/auth/google/callback` as an authorized Google OAuth redirect URI. Google accounts must have a verified email, and new Google merchants are created only while public registration is enabled. Google sign-in cannot authenticate administrator accounts.
 
 ---
 

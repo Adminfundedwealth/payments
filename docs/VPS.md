@@ -2,7 +2,7 @@
 
 Ubuntu VPS deployment uses Nginx, PHP-FPM, and MySQL. These commands prepare the server; the final application setup is completed through the same browser wizard described in [INSTALLATION.md](INSTALLATION.md).
 
-The installer disables public registration by default. To intentionally open merchant signup, set `ALLOW_REGISTRATION=true` in the private `.env` file and run `php artisan config:cache` if configuration is cached. Set it back to `false` to close signup; existing merchant login and administrator merchant controls remain available.
+The installer disables public registration by default. `/register` shows a notice while closed, and the login page always shows a Sign Up link. To open merchant signup, set `ALLOW_REGISTRATION=true` in the private `.env` file and refresh cached configuration if needed. Set it back to `false` to close new registrations. Google sign-in also requires private OAuth client credentials and an authorized callback URL ending in `/auth/google/callback`.
 
 ## 1. Install server packages
 

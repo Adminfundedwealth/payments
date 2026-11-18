@@ -1,5 +1,18 @@
 import './bootstrap';
 
+document.addEventListener('submit', (event) => {
+    const form = event.target;
+    if (!(form instanceof HTMLFormElement) || !form.matches('[data-loading-form]')) return;
+
+    const button = form.querySelector('button[type="submit"]');
+    if (!button) return;
+
+    button.disabled = true;
+    button.setAttribute('aria-busy', 'true');
+    const label = button.querySelector('[data-submit-label]');
+    if (label) label.textContent = button.dataset.loadingLabel || 'Please wait...';
+});
+
 /**
  * data-copy="<text>" — copies the text to the clipboard and briefly shows "Copied!".
  * Used on payment link copy buttons throughout the dashboard.
