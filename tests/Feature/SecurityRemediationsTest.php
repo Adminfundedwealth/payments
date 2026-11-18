@@ -115,8 +115,10 @@ class SecurityRemediationsTest extends TestCase
             'role' => 'admin',
         ]);
         $this->withoutMiddleware(RequirePassword::class);
-        $this->actingAs($admin)->get(route('admin.merchants'))->assertOk()->assertSee($merchant->email);
-        $this->actingAs($admin)->post(route('admin.merchants.toggle', $merchant))->assertRedirect();
+        $this->actingAs($admin);
+        $this->withSession(['auth.password_confirmed_at' => now()->timestamp]);
+        $this->get(route('admin.merchants'))->assertOk()->assertSee($merchant->email);
+        $this->post(route('admin.merchants.toggle', $merchant))->assertRedirect();
         $this->assertFalse($merchant->fresh()->is_active);
     }
 
