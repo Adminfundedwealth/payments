@@ -706,6 +706,8 @@ class CpanelInstallerTest extends TestCase
         file_put_contents($tempDir.'/repotest/vendor/autoload.php', "<?php // mock autoload\n");
         copy(base_path('public/index.php'), $tempDir.'/repotest/public/index.php');
 
+        $originalAppKey = getenv('APP_KEY');
+        putenv('APP_KEY');
         [$process, $port] = $this->startPhpServer($tempDir);
 
         try {
@@ -732,6 +734,11 @@ class CpanelInstallerTest extends TestCase
             }
         } finally {
             $this->stopPhpServer($process);
+            if ($originalAppKey === false) {
+                putenv('APP_KEY');
+            } else {
+                putenv('APP_KEY='.$originalAppKey);
+            }
             @unlink($tempDir.'/repotest/public/index.php');
             @unlink($tempDir.'/repotest/vendor/autoload.php');
             @unlink($tempDir.'/repotest/app/Support/DeploymentUrl.php');
@@ -1037,9 +1044,10 @@ class CpanelInstallerTest extends TestCase
             fclose($sock);
         }
 
-        $cmd = $routerScript !== null
-            ? sprintf('exec php -S 127.0.0.1:%d -t %s %s', $port, escapeshellarg($docRoot), escapeshellarg($routerScript))
-            : sprintf('exec php -S 127.0.0.1:%d -t %s', $port, escapeshellarg($docRoot));
+        $cmd = array_merge(
+            [PHP_BINARY, '-S', "127.0.0.1:{$port}", '-t', $docRoot],
+            $routerScript !== null ? [$routerScript] : [],
+        );
 
         $descriptorSpec = [
             0 => ['pipe', 'r'],
