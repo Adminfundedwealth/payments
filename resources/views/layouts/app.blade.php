@@ -23,39 +23,38 @@
         ];
     }
 @endphp
-<div class="min-h-full">
+<div class="app-shell min-h-full">
     {{-- Mobile top bar --}}
-    <div class="lg:hidden sticky top-0 z-30 flex items-center justify-between bg-white/90 backdrop-blur border-b border-slate-200 px-4 h-14">
+    <div class="app-header app-mobile-header lg:hidden sticky top-0 z-30 flex items-center justify-between bg-white/90 backdrop-blur border-b border-slate-200 px-4 h-14">
         <a href="{{ route('dashboard') }}"><x-logo /></a>
-        <button type="button" data-sidebar-toggle class="btn btn-ghost p-2" aria-label="Open menu">
+        <button type="button" data-sidebar-toggle class="btn btn-ghost p-2" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
             <x-icon name="menu" class="w-6 h-6" />
         </button>
     </div>
-    <div id="backdrop" data-sidebar-close class="hidden lg:hidden fixed inset-0 z-30 bg-slate-900/40"></div>
+    <div id="backdrop" data-sidebar-close class="app-backdrop hidden lg:hidden fixed inset-0 z-30 bg-slate-900/40" aria-hidden="true"></div>
 
     {{-- Sidebar --}}
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 -translate-x-full lg:translate-x-0 transition-transform bg-white border-r border-slate-200 flex flex-col">
-        <div class="h-16 flex items-center px-5 border-b border-slate-100">
+    <aside id="sidebar" class="app-sidebar fixed inset-y-0 left-0 z-40 w-64 -translate-x-full lg:translate-x-0 transition-transform bg-white border-r border-slate-200 flex flex-col" aria-label="Main navigation">
+        <div class="app-sidebar-brand h-16 flex items-center px-5 border-b border-slate-100">
             <a href="{{ route('dashboard') }}"><x-logo /></a>
         </div>
 
-        <div class="px-3 pt-4">
+        <div class="app-sidebar-action px-3 pt-4">
             <a href="{{ route('orders.create') }}" class="btn btn-primary w-full"><x-icon name="plus" class="w-4 h-4" /> New payment link</a>
         </div>
 
-        <nav class="flex-1 overflow-y-auto px-3 py-4 space-y-6">
+        <nav class="app-sidebar-nav flex-1 overflow-y-auto px-3 py-4 space-y-6">
             @foreach ($sections as $heading => $items)
                 <div>
-                    <div class="px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">{{ $heading }}</div>
+                    <div class="app-nav-heading px-3 mb-1.5 text-[11px] font-semibold uppercase tracking-wider text-slate-400">{{ $heading }}</div>
                     <div class="space-y-0.5">
                         @foreach ($items as [$route, $label, $icon, $pattern])
                             @php $active = request()->routeIs($pattern); @endphp
                             <a href="{{ route($route) }}" @class([
-                                'group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition',
-                                'bg-brand-50 text-brand-700' => $active,
-                                'text-slate-600 hover:bg-slate-50 hover:text-slate-900' => ! $active,
-                            ])>
-                                <x-icon :name="$icon" @class(['w-5 h-5', 'text-brand-600' => $active, 'text-slate-400 group-hover:text-slate-600' => ! $active]) />
+                                'app-nav-link group flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition',
+                                'app-nav-link-active' => $active,
+                            ]) @if ($active) aria-current="page" @endif>
+                                <x-icon :name="$icon" class="app-nav-icon w-5 h-5" />
                                 <span class="flex-1">{{ $label }}</span>
                                 @if ($route === 'orders.index' && $reviewCount)
                                     <span class="rounded-full bg-sky-500 px-1.5 text-[11px] font-semibold text-white tabular-nums" title="Payments waiting for your review">{{ $reviewCount }}</span>
@@ -67,7 +66,7 @@
             @endforeach
         </nav>
 
-        <div class="border-t border-slate-100 p-3">
+        <div class="app-sidebar-footer border-t border-slate-100 p-3">
             <div class="flex items-center gap-3 rounded-lg px-2 py-2">
                 <x-avatar :name="$user->displayName()" />
                 <div class="min-w-0 flex-1">
@@ -82,8 +81,26 @@
     </aside>
 
     {{-- Main --}}
-    <div class="lg:pl-64">
-        <main class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 py-6 lg:py-10">
+    <div class="app-content lg:pl-64">
+        <header class="app-topbar hidden lg:flex items-center justify-between px-8 xl:px-10 py-3">
+            <div class="app-topbar-context text-sm font-medium">Merchant workspace</div>
+            <div class="app-topbar-actions flex items-center gap-3">
+                <a href="{{ route('orders.index', ['status' => 'review']) }}" class="app-notification relative grid place-items-center w-10 h-10 rounded-xl" aria-label="Notifications: {{ $reviewCount }} payments waiting for review" title="{{ $reviewCount }} payments waiting for review">
+                    <x-icon name="bell" class="w-5 h-5" />
+                    @if ($reviewCount)
+                        <span class="app-notification-badge absolute -right-1 -top-1 min-w-5 rounded-full px-1 text-center text-[10px] font-bold text-white tabular-nums">{{ $reviewCount }}</span>
+                    @endif
+                </a>
+                <a href="{{ route('settings') }}" class="app-profile flex items-center gap-3 rounded-xl px-2.5 py-1.5" aria-label="Account settings">
+                    <x-avatar :name="$user->displayName()" size="w-9 h-9" />
+                    <span class="app-profile-copy text-left">
+                        <span class="block text-sm font-semibold">{{ $user->displayName() }}</span>
+                        <span class="block text-xs">{{ $user->email }}</span>
+                    </span>
+                </a>
+            </div>
+        </header>
+        <main class="app-main mx-auto max-w-7xl px-4 sm:px-6 lg:px-10 py-6 lg:py-10">
             <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
                 <div class="min-w-0">
                     @hasSection('back')
@@ -96,12 +113,12 @@
             </div>
 
             @if (session('status'))
-                <div class="mb-6 flex items-start gap-3 rounded-xl bg-emerald-50 ring-1 ring-emerald-200 text-emerald-800 px-4 py-3 text-sm">
+                <div class="flash-message flash-success mb-6 flex items-start gap-3 rounded-xl bg-emerald-50 ring-1 ring-emerald-200 text-emerald-800 px-4 py-3 text-sm" role="status">
                     <x-icon name="check-circle" class="w-5 h-5 text-emerald-600" /><div>{{ session('status') }}</div>
                 </div>
             @endif
             @if ($errors->any())
-                <div class="mb-6 flex items-start gap-3 rounded-xl bg-red-50 ring-1 ring-red-200 text-red-800 px-4 py-3 text-sm">
+                <div class="flash-message flash-error mb-6 flex items-start gap-3 rounded-xl bg-red-50 ring-1 ring-red-200 text-red-800 px-4 py-3 text-sm" role="alert">
                     <x-icon name="alert" class="w-5 h-5 text-red-600" />
                     <div>@foreach ($errors->all() as $error)<div>{{ $error }}</div>@endforeach</div>
                 </div>

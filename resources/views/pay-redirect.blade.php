@@ -1,7 +1,8 @@
 @extends('layouts.base')
 @section('title', 'Redirecting to secure checkout')
 @section('body')
-<div class="min-h-full flex flex-col items-center justify-center p-6 text-center bg-slate-100">
+<div class="redirect-page min-h-full flex flex-col items-center justify-center p-6 text-center bg-slate-100">
+    <div class="mb-6"><x-logo /></div>
     <svg class="w-10 h-10 animate-spin text-brand-600" viewBox="0 0 24 24" fill="none">
         <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-opacity=".2" stroke-width="3"/>
         <path d="M21 12a9 9 0 0 0-9-9" stroke="currentColor" stroke-width="3" stroke-linecap="round"/>

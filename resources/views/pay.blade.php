@@ -19,7 +19,7 @@
 @endpush
 
 @section('body')
-<div class="min-h-full bg-slate-100 flex flex-col">
+<div class="payment-checkout min-h-full bg-slate-100 flex flex-col">
     <div class="flex-1 flex items-center justify-center p-4 sm:p-8">
         <div class="w-full max-w-3xl bg-white rounded-2xl shadow-pop ring-1 ring-slate-200 overflow-hidden grid md:grid-cols-5">
 
@@ -55,7 +55,7 @@
                         <div class="relative w-14 h-14">
                             <svg viewBox="0 0 36 36" class="w-14 h-14 -rotate-90">
                                 <circle cx="18" cy="18" r="16" fill="none" stroke="rgb(255 255 255 / .12)" stroke-width="3" />
-                                <circle id="ring" cx="18" cy="18" r="16" fill="none" stroke="#818cf8" stroke-width="3" stroke-linecap="round" stroke-dasharray="100.5" stroke-dashoffset="0" class="ring-transition" />
+                                <circle id="ring" cx="18" cy="18" r="16" fill="none" stroke="var(--color-electric-blue)" stroke-width="3" stroke-linecap="round" stroke-dasharray="100.5" stroke-dashoffset="0" class="ring-transition" />
                             </svg>
                             <div id="timer" class="absolute inset-0 grid place-items-center font-mono text-xs font-medium">--:--</div>
                         </div>
@@ -149,7 +149,7 @@
                             <div class="relative w-10 h-10">
                                 <svg viewBox="0 0 36 36" class="w-10 h-10 -rotate-90">
                                     <circle cx="18" cy="18" r="16" fill="none" stroke="rgb(0 0 0 / .08)" stroke-width="3" />
-                                    <circle id="ring-pg" cx="18" cy="18" r="16" fill="none" stroke="#818cf8" stroke-width="3" stroke-linecap="round" stroke-dasharray="100.5" stroke-dashoffset="0" class="ring-transition" />
+                                    <circle id="ring-pg" cx="18" cy="18" r="16" fill="none" stroke="var(--color-electric-blue)" stroke-width="3" stroke-linecap="round" stroke-dasharray="100.5" stroke-dashoffset="0" class="ring-transition" />
                                 </svg>
                                 <div id="timer-pg" class="absolute inset-0 grid place-items-center font-mono text-[10px] font-medium text-slate-700">--:--</div>
                             </div>
@@ -246,7 +246,7 @@
         const left = Math.max(0, Math.floor((expiresAt - Date.now()) / 1000));
         const display = String(Math.floor(left / 60)).padStart(2, '0') + ':' + String(left % 60).padStart(2, '0');
         const offset = (100.5 * (1 - left / total)).toFixed(2);
-        const stroke = left < 60 ? '#f87171' : '#818cf8';
+        const stroke = left < 60 ? '#f87171' : getComputedStyle(document.documentElement).getPropertyValue('--color-electric-blue').trim();
         timer.textContent = display;
         ring.style.strokeDashoffset = offset;
         ring.style.stroke = stroke;

@@ -13,6 +13,31 @@ document.addEventListener('submit', (event) => {
     if (label) label.textContent = button.dataset.loadingLabel || 'Please wait...';
 });
 
+function setSidebarOpen(open) {
+    const sidebar = document.getElementById('sidebar');
+    const backdrop = document.getElementById('backdrop');
+    const toggle = document.querySelector('[data-sidebar-toggle]');
+    if (!sidebar || !backdrop || !toggle) return;
+
+    sidebar.classList.toggle('-translate-x-full', !open);
+    backdrop.classList.toggle('hidden', !open);
+    backdrop.setAttribute('aria-hidden', String(!open));
+    toggle.setAttribute('aria-expanded', String(open));
+
+    if (open) sidebar.querySelector('a')?.focus();
+    else toggle.focus();
+}
+
+function setPublicNavOpen(open) {
+    const menu = document.getElementById('public-mobile-menu');
+    const toggle = document.querySelector('[data-public-nav-toggle]');
+    if (!menu || !toggle) return;
+
+    menu.classList.toggle('hidden', !open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close navigation menu' : 'Open navigation menu');
+}
+
 /**
  * data-copy="<text>" — copies the text to the clipboard and briefly shows "Copied!".
  * Used on payment link copy buttons throughout the dashboard.
@@ -45,13 +70,22 @@ document.addEventListener('click', (event) => {
     }
 
     if (event.target.closest('[data-sidebar-toggle]')) {
-        document.getElementById('sidebar')?.classList.toggle('-translate-x-full');
-        document.getElementById('backdrop')?.classList.toggle('hidden');
+        const sidebar = document.getElementById('sidebar');
+        setSidebarOpen(sidebar?.classList.contains('-translate-x-full') ?? false);
     }
 
     if (event.target.closest('[data-sidebar-close]')) {
-        document.getElementById('backdrop')?.classList.add('hidden');
-        document.getElementById('sidebar')?.classList.add('-translate-x-full');
+        setSidebarOpen(false);
+    }
+
+    if (event.target.closest('[data-public-nav-toggle]')) {
+        const menu = document.getElementById('public-mobile-menu');
+        setPublicNavOpen(menu?.classList.contains('hidden') ?? false);
+    }
+
+    if (event.target.closest('#public-mobile-menu a')) {
+        setPublicNavOpen(false);
+        document.querySelector('[data-public-nav-toggle]')?.focus();
     }
 
     if (event.target.closest('[data-toggle-secret]')) {
@@ -61,6 +95,21 @@ document.addEventListener('click', (event) => {
 
     if (event.target.closest('[data-reload-page]')) {
         window.location.reload();
+    }
+});
+
+document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+
+    const backdrop = document.getElementById('backdrop');
+    if (backdrop && !backdrop.classList.contains('hidden')) {
+        setSidebarOpen(false);
+    }
+
+    const menu = document.getElementById('public-mobile-menu');
+    if (menu && !menu.classList.contains('hidden')) {
+        setPublicNavOpen(false);
+        document.querySelector('[data-public-nav-toggle]')?.focus();
     }
 });
 

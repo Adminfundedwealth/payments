@@ -89,17 +89,17 @@ class SecurityRemediationsTest extends TestCase
     public function test_registration_defaults_closed_while_existing_login_and_admin_controls_work(): void
     {
         $this->assertFalse(config('auth.allow_registration'));
-        $this->get('/login')->assertOk()->assertDontSee(route('register'));
+        $this->get('/login')->assertOk()->assertSee(route('register'));
         $this->get('/')->assertOk()->assertDontSee(route('register'));
         $this->get('/docs')->assertOk()->assertDontSee(route('register'));
-        $this->get('/register')->assertNotFound();
+        $this->get('/register')->assertOk()->assertSee('registration is temporarily unavailable');
         $this->post('/register', [
             'name' => 'Blocked Merchant',
             'business_name' => 'Blocked Business',
             'email' => 'blocked-default@example.com',
             'password' => 'password12345',
             'password_confirmation' => 'password12345',
-        ])->assertNotFound();
+        ])->assertRedirect(route('register'))->assertSessionHas('status');
         $this->assertDatabaseMissing('users', ['email' => 'blocked-default@example.com']);
 
         $merchant = $this->createMerchant();
@@ -115,8 +115,15 @@ class SecurityRemediationsTest extends TestCase
             'role' => 'admin',
         ]);
         $this->withoutMiddleware(RequirePassword::class);
-        $this->actingAs($admin)->get(route('admin.merchants'))->assertOk()->assertSee($merchant->email);
-        $this->actingAs($admin)->post(route('admin.merchants.toggle', $merchant))->assertRedirect();
+        $this->withSession(['auth.password_confirmed_at' => now()->timestamp])
+            ->actingAs($admin)
+            ->get(route('admin.merchants'))
+            ->assertOk()
+            ->assertSee($merchant->email);
+        $this->withSession(['auth.password_confirmed_at' => now()->timestamp])
+            ->actingAs($admin)
+            ->post(route('admin.merchants.toggle', $merchant))
+            ->assertRedirect();
         $this->assertFalse($merchant->fresh()->is_active);
     }
 
@@ -143,8 +150,8 @@ class SecurityRemediationsTest extends TestCase
     {
         config(['auth.allow_registration' => false]);
 
-        $this->get('/login')->assertOk()->assertDontSee(route('register'));
-        $this->get('/register')->assertNotFound();
+        $this->get('/login')->assertOk()->assertSee(route('register'));
+        $this->get('/register')->assertOk()->assertSee('registration is temporarily unavailable');
 
         $this->post('/register', [
             'name' => 'Blocked Merchant',
@@ -152,7 +159,7 @@ class SecurityRemediationsTest extends TestCase
             'email' => 'blocked@example.com',
             'password' => 'password12345',
             'password_confirmation' => 'password12345',
-        ])->assertNotFound();
+        ])->assertRedirect(route('register'))->assertSessionHas('status');
 
         $this->assertDatabaseMissing('users', ['email' => 'blocked@example.com']);
     }

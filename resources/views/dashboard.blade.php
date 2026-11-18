@@ -23,7 +23,7 @@
     @endif
 </div>
 @if ($stats['review_count'])
-    <a href="{{ route('orders.index', ['environment' => $environment, 'status' => 'review']) }}" class="mb-6 flex items-center gap-4 rounded-xl bg-sky-50 ring-1 ring-sky-200 px-5 py-4 hover:bg-sky-100/70 transition">
+    <a href="{{ route('orders.index', ['environment' => $environment, 'status' => 'review']) }}" class="dashboard-review-alert mb-6 flex items-center gap-4 rounded-xl bg-sky-50 ring-1 ring-sky-200 px-5 py-4 hover:bg-sky-100/70 transition">
         <span class="grid place-items-center w-10 h-10 rounded-lg bg-sky-500 text-white shrink-0"><x-icon name="shield" class="w-5 h-5" /></span>
         <div class="flex-1">
             <div class="font-semibold text-sky-900">{{ $stats['review_count'] }} {{ Str::plural('payment', $stats['review_count']) }} waiting for your review</div>
@@ -34,17 +34,21 @@
 @endif
 
 {{-- Stats --}}
-<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
+<div class="dashboard-metrics grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 mb-6">
     @foreach ([
-        [$environment === 'sandbox' ? 'Simulated today' : 'Collected today', $inr($stats['today_amount']), $stats['today_count'].' '.Str::plural('payment', $stats['today_count']), 'banknotes', 'bg-emerald-50 text-emerald-600'],
-        [$environment === 'sandbox' ? 'Total simulated' : 'Total collected', $inr($stats['total_amount']), $stats['paid_count'].' successful '.Str::plural('payment', $stats['paid_count']), 'chart', 'bg-brand-50 text-brand-600'],
-        ['Pending orders', $stats['pending_count'], 'Waiting for customer payment', 'clock', 'bg-amber-50 text-amber-600'],
-        ['Success rate', $stats['success_rate'] === null ? '—' : $stats['success_rate'].'%', 'Paid vs expired orders', 'check-circle', 'bg-sky-50 text-sky-600'],
+        ['Total payments', number_format($stats['total_count']), 'All '.$environment.' orders', 'receipt', 'metric-icon--cyan'],
+        ['Successful payments', number_format($stats['paid_count']), 'Confirmed and collected', 'check-circle', 'metric-icon--blue'],
+        ['Awaiting payment', number_format($stats['pending_count']), 'Waiting for customer payment', 'clock', 'metric-icon--violet'],
+        ['Needs review', number_format($stats['review_count']), 'Customer-submitted UTRs', 'shield', 'metric-icon--orange'],
+        ['Failed payments', number_format($stats['failed_count']), 'Unsuccessful transactions', 'x-mark', 'metric-icon--danger'],
+        [$environment === 'sandbox' ? 'Total simulated' : 'Revenue collected', $inr($stats['total_amount']), 'Lifetime confirmed payments', 'banknotes', 'metric-icon--cyan'],
+        [$environment === 'sandbox' ? 'Simulated today' : 'Collected today', $inr($stats['today_amount']), $stats['today_count'].' '.Str::plural('payment', $stats['today_count']), 'chart', 'metric-icon--blue'],
+        ['Success rate', $stats['success_rate'] === null ? '—' : $stats['success_rate'].'%', 'Successful vs closed payments', 'check-circle', 'metric-icon--violet'],
     ] as [$label, $value, $hint, $icon, $tone])
-        <div class="card p-5">
+        <div class="dashboard-stat-card card p-5">
             <div class="flex items-center justify-between">
                 <div class="text-sm font-medium text-slate-500">{{ $label }}</div>
-                <div class="grid place-items-center w-9 h-9 rounded-lg {{ $tone }}"><x-icon :name="$icon" class="w-5 h-5" /></div>
+                <div class="dashboard-stat-icon grid place-items-center w-9 h-9 rounded-lg {{ $tone }}"><x-icon :name="$icon" class="w-5 h-5" /></div>
             </div>
             <div class="mt-3 text-2xl font-bold tracking-tight text-slate-900">{{ $value }}</div>
             <div class="mt-1 text-xs text-slate-500">{{ $hint }}</div>
@@ -54,7 +58,7 @@
 
 <div class="grid grid-cols-1 xl:grid-cols-3 gap-6 mb-6">
     {{-- 7-day chart --}}
-    <div class="card xl:col-span-2">
+    <div class="dashboard-chart card xl:col-span-2">
         <div class="card-header">
             <div>
                 <div class="card-title">{{ $environment === 'sandbox' ? 'Simulated payments' : 'Collections' }} · last 7 days</div>
